@@ -1,0 +1,21 @@
+---
+title: "QC of Danny's CRISPR library"
+subtitle: "Library from Joung, J., et al. (2016) Nature protocols  DOI: 10.1038/nprot.2017.016"
+output: html_notebook
+---
+
+```{r}
+# Load libraries
+library(readxl)
+
+# Set working directory
+setwd("/home/martinezvbs/Downloads/Danny")
+
+```
+```{r}
+# Load the CRISPR library file
+crispr_library <- read_excel("/home/martinezvbs/Downloads/Danny/tf_orf_library.xlsx")
+
+
+
+```
