@@ -1,15 +1,14 @@
 #Supplementary Data 3: count_spacers.py
 
-from Bio import SeqIO
+import argparse
 import csv
 from collections import OrderedDict
 import numpy as np
-import sys
-import argparse
+from Bio import SeqIO
 
-KEY_REGION_START = 4305 #start index of key region
-KEY_REGION_END = 4335 #end index of key region
-KEY = "TTGGCTTTATATATCTTGTGGAAAGGACGA" #identifies sequence before guide to determine guide position
+KEY_REGION_START = 4305  #start index of key region
+KEY_REGION_END = 4335  #end index of key region
+KEY = "TTGGCTTTATATATCTTGTGGAAAGGACGA"  #identifies sequence before guide to determine guide position
 
 def count_spacers(input_file, fastq_file, output_file, guide_g):
     """
@@ -19,10 +18,10 @@ def count_spacers(input_file, fastq_file, output_file, guide_g):
     dictionary: guide sequence as key, guide count as entry
     """
 
-    num_reads = 0 #total number of reads processed
-    perfect_matches = 0 # guides with perfect match to library
-    non_perfect_matches = 0 #number of guides without a perfect match to the library
-    key_not_found = 0 #count of reads where key was not found
+    num_reads = 0  #total number of reads processed
+    perfect_matches = 0  # guides with perfect match to library
+    non_perfect_matches = 0  #number of guides without a perfect match to the library
+    key_not_found = 0  #count of reads where key was not found
 
     # add 'G' to key sequence if included in library
     if guide_g:
@@ -31,22 +30,22 @@ def count_spacers(input_file, fastq_file, output_file, guide_g):
 
     # open library sequences and initiate dictionary of read counts for each guide
     try:
-        with open(input_file, mode='rU') as infile: #rU mode is necessary for excel!
+        with open(input_file, mode='rU') as infile:  #rU mode is necessary for Excel!
             reader = csv.reader(infile)
-            dictionary = {rows[0]:0 for rows in reader}
+            dictionary = {rows[0]: 0 for rows in reader}
     except:
-        print  ("could not open"), input_file
+        print "could not open", input_file
 
     # open fastq file
     try:
         handle = open(fastq_file, "rU")
     except:
-        print ("could not find fastq file")
+        print "could not find fastq file"
         return
 
     # process reads in fastq file
     readiter = SeqIO.parse(handle, "fastq")
-    for record in readiter: #contains the seq and Qscore etc.
+    for record in readiter:  #contains the seq and Q score etc.
         num_reads += 1
         read_sequence = str.upper(str(record.seq))
         key_region = read_sequence[KEY_REGION_START:KEY_REGION_END]
@@ -68,19 +67,19 @@ def count_spacers(input_file, fastq_file, output_file, guide_g):
         mywriter = csv.writer(csvfile, delimiter=',')
         for guide in dict_sorted:
             count = dict_sorted[guide]
-            mywriter.writerow([guide,count])
+            mywriter.writerow([guide, count])
 
     # percentage of guides that matched perfectly
-    percent_matched = round(perfect_matches/float(perfect_matches + non_perfect_matches) * 100, 1)
+    percent_matched = round(perfect_matches / float(perfect_matches + non_perfect_matches) * 100, 1)
     # percentage of undetected guides with no read counts
     guides_with_reads = np.count_nonzero(dictionary.values())
     guides_no_reads = len(dictionary.values()) - guides_with_reads
-    percent_no_reads = round(guides_no_reads/float(len(dictionary.values())) * 100, 1)
+    percent_no_reads = round(guides_no_reads / float(len(dictionary.values())) * 100, 1)
     # skew ratio of top 10% to bottom 10% of guide counts
     top_10 = np.percentile(dictionary.values(), 90)
     bottom_10 = np.percentile(dictionary.values(), 10)
     if top_10 != 0 and bottom_10 != 0:
-        skew_ratio = top_10/bottom_10
+        skew_ratio = top_10 / bottom_10
     else:
         skew_ratio = 'Not enough perfect matches to determine skew ratio'
 
