@@ -35,13 +35,13 @@ def count_spacers(input_file, fastq_file, output_file, guide_g):
             reader = csv.reader(infile)
             dictionary = {rows[0]:0 for rows in reader}
     except:
-        print  'could not open', input_file
+        print  ('could not open'), input_file
 
     # open fastq file
     try:
         handle = open(fastq_file, "rU")
     except:
-        print "could not find fastq file"
+        print ("could not find fastq file")
         return
 
     # process reads in fastq file
