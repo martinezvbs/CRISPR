@@ -1,4 +1,6 @@
 # CRISPR Data Analysis Pipeline
+This pipeline is designed to analyze CRISPR data from Next Generation Sequencing (NGS) experiments. 
+It is designed to be run on both high performance computing cluster or personal computer. The pipeline is written in Python and uses Snakemake to manage the workflow.
 
 ### [The Augert Lab](https://www.augertlab.org/)
 #### Yale University, Department of Pathology
