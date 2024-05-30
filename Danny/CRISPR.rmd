@@ -1,6 +1,0 @@
----
-title: "QC of Danny's CRISPR library"
-subtitle: "2017-07-07"
-output: html_notebook
----
-
